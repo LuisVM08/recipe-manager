@@ -1,0 +1,18 @@
+{% extends "recipes/base.html" %}
+{% block title %}Add/Edit Recipe{% endblock %}
+{% block content %}
+<h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Recipe</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    {% if form.instance.pk %}
+        <a href="{% url 'recipesns:recipe_detail' form.instance.pk %}" class="btn btn-secondary">Cancel</a>
+    {% else %}
+        <a href="{% url 'recipesns:recipe_list' %}" class="btn btn-secondary">Cancel</a>
+    {% endif %}
+
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
+{% endblock %}

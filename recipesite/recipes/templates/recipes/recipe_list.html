@@ -2,6 +2,7 @@
 {% block title %}My Recipes{% endblock %}
 {% block content %}
 <h2>Your Recipes</h2>
+<a href="{% url 'recipesns:recipe_create' %}" class="btn btn-primary mb-3">Add Recipe</a>
 
 <div class="row row-cols-1 row-cols-md-2 g-4">
     {% for recipe in recipes %}
@@ -21,6 +22,10 @@
                 <p><strong>Description:</strong>
                     {{ recipe.description|truncatechars:60 }}
                 </p>
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'recipesns:recipe_update' recipe.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <a href="{% url 'recipesns:recipe_delete' recipe.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
             </div>
         </div>
     </div>
