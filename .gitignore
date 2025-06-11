@@ -1,3 +1,5 @@
 .idea/
 recipesite/recipesite/__pycache__/
 recipesite/db.sqlite3
+recipesite/recipes/__pycache__/
+recipesite/recipes/migrations/__pycache__/
