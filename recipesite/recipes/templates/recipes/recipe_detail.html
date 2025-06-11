@@ -1,0 +1,13 @@
+{% extends "recipes/base.html" %}
+{% block title %}{{ specific_recipe.name }}{% endblock %}
+
+{% block content %}
+    <h2>{{ specific_recipe.name }}</h2>
+    <p><strong>User:</strong><br>{{ specific_recipe.user|linebreaks }}</p>
+    <p><strong>Description:</strong> {{ specific_recipe.description }}</p>
+    <p><strong>Ingredients:</strong><br>{{ specific_recipe.ingredients|linebreaks }}</p>
+    <p><strong>Cost:</strong><br>{{ specific_recipe.cost|linebreaks }}</p>
+    <p><strong>Time:</strong><br>{{ specific_recipe.time|linebreaks }}</p>
+    <p><strong>Created at:</strong><br>{{ specific_recipe.created_at|date:"M d, Y h:i A"|linebreaks }}</p>
+    <p><strong>Is public:</strong><br>{{ specific_recipe.is_public|linebreaks }}</p>
+{% endblock %}
