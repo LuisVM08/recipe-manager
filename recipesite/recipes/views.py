@@ -35,3 +35,31 @@ class RecipeDeleteView(DeleteView):
     model = Recipe
     template_name = 'recipes/recipe_delete.html'
     success_url = reverse_lazy('recipesns:recipe_list')
+
+class RecipeTableView(ListView):
+    model = Recipe
+    template_name = 'recipes/recipe_table.html'
+    context_object_name = 'recipes'
+
+    # Defines what the data will be used as the main object in the template
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort', 'cost')
+        direction = self.request.GET.get('dir', 'asc')
+        valid_fields = ['name', 'description', 'cost', 'time', 'is_public']
+
+        if sort_by not in valid_fields:
+            sort_by = 'cost'
+
+        order = sort_by if direction == 'asc' else f"-{sort_by}"
+        return Recipe.objects.order_by(order)
+
+    # Override to make get_context_data to include sort state in template context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_sort'] = self.request.GET.get('sort', 'name')
+        context['current_dir'] = self.request.GET.get('dir', 'asc')
+        return context
+
+
+
+

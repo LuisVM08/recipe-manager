@@ -1,0 +1,34 @@
+{% extends "recipes/base.html" %}
+{% load sortable %}
+{% block title %}Sortable Recipe Table{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">All Public Recipes (Sortable Table)</h2>
+
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>{% sortable_column "name" "Name" current_sort current_dir %}</th>
+      <th>Description</th>
+      <th>{% sortable_column "cost" "Cost ($)" current_sort current_dir %}</th>
+      <th>{% sortable_column "time" "Time (min)" current_sort current_dir %}</th>
+      <th>{% sortable_column "is_public" "Is Public" current_sort current_dir %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for recipe in recipes %}
+    <tr>
+      <td><a href="{% url 'recipesns:recipe_detail' recipe.pk %}">{{ recipe.name }}</a></td>
+      <td>{{ recipe.description|truncatechars:60 }}</td>
+      <td>{{ recipe.cost }}</td>
+      <td>{{ recipe.time }}</td>
+      <td>{{ recipe.is_public }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">No public recipes found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
