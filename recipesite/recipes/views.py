@@ -29,6 +29,13 @@ class RecipeCreateView(CreateView):
     form_class = RecipeForm
     success_url = reverse_lazy('recipesns:recipe_list')
 
+    def form_valid(self, form):
+        if self.request.user.is_authenticated:
+            form.instance.user = self.request.user
+        else:
+            form.instance.user = None  # Explicitly set None, or just omit this line
+        return super().form_valid(form)
+
 
 class RecipeUpdateView(UpdateView):
     model = Recipe
