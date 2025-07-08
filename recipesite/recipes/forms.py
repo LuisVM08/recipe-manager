@@ -7,4 +7,4 @@ class RecipeForm(forms.ModelForm):
         # The model to build the form for
         model = Recipe
         # Which form fields will be included in the form
-        fields = '__all__'
+        exclude = ['user', 'created_at']

@@ -4,3 +4,4 @@ recipesite/db.sqlite3
 recipesite/recipes/__pycache__/
 recipesite/recipes/migrations/__pycache__/
 recipesite/recipes/templatetags/__pycache__/
+recipesite/recipes/tests/__pycache__/

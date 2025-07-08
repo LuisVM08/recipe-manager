@@ -11,7 +11,11 @@ class RecipeListView(ListView):
     model = Recipe
     template_name = 'recipes/recipe_list.html'
     context_object_name = 'recipes'
-    paginate_by = 4
+    paginate_by = 6
+
+    # Order the queryset by the most recent first
+    def get_queryset(self):
+        return Recipe.objects.order_by('-created_at')
 
 class RecipeDetailView(DetailView):
     model = Recipe
