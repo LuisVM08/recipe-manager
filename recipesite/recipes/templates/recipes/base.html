@@ -16,6 +16,19 @@
         <a class="navbar-brand" href="{% url 'recipesns:recipe_table' %}">Recipe Table</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link btn btn-link" style="padding: 0; border: none;">
+                                    Logout ({{ user.username|title }})
+                                </button>
+                            </form>
+                        </li>
+                {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'recipesns:signup' %}">Sign Up</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
