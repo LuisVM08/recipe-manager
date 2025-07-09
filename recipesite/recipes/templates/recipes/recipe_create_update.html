@@ -2,17 +2,54 @@
 {% block title %}Add/Edit Recipe{% endblock %}
 {% block content %}
 <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Recipe</h2>
-<form method="post" enctype="multipart/form-data">
+<form id="recipe-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     {{ form.as_p }}
 
-    {% if form.instance.pk %}
-        <a href="{% url 'recipesns:recipe_detail' form.instance.pk %}" class="btn btn-secondary">Cancel</a>
-    {% else %}
-        <a href="{% url 'recipesns:recipe_list' %}" class="btn btn-secondary">Cancel</a>
-    {% endif %}
+    <div class="form-buttons">
+        <button type="button" class="btn btn-info" id="autofill-btn">Autofill</button>
 
-    <button type="submit" class="btn btn-success">Save</button>
+        {% if form.instance.pk %}
+            <a href="{% url 'recipesns:recipe_detail' form.instance.pk %}" class="btn btn-secondary">Cancel</a>
+        {% else %}
+            <a href="{% url 'recipesns:recipe_list' %}" class="btn btn-secondary">Cancel</a>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success">Save</button>
+    </div>
 </form>
+
+<script>
+const autofillURL = "{% url 'recipesns:autofill_recipe' %}";
+
+document.getElementById('autofill-btn').addEventListener('click', function () {
+    const name = document.getElementById('id_name').value;
+
+    fetch(`${autofillURL}?name=${encodeURIComponent(name)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.description) {
+                    document.getElementById('id_description').value = data.description;
+                }
+                if (data.cost) {
+                    document.getElementById('id_cost').value = data.cost;
+                }
+                if (data.time) {
+                    document.getElementById('id_time').value = data.time;
+                }
+                if (data.ingredients) {
+                    document.getElementById('id_ingredients').value = data.ingredients;
+                }
+            } else {
+                alert('No suggestion found for that recipe name.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching autofill data:', error);
+        });
+});
+</script>
+
 {% endblock %}
