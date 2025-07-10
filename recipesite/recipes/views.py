@@ -10,6 +10,9 @@ import re
 from html import unescape
 import requests
 from django.conf import settings
+from django.db import models
+from django.http import Http404
+
 # Create your views here.
 
 class RecipeListView(ListView):
@@ -20,12 +23,24 @@ class RecipeListView(ListView):
 
     # Order the queryset by the most recent first
     def get_queryset(self):
-        return Recipe.objects.order_by('-created_at')
+        if self.request.user.is_authenticated:
+            return Recipe.objects.filter(
+                models.Q(is_public=True) | models.Q(user=self.request.user)
+            ).order_by('-created_at')
+        else:
+            return Recipe.objects.filter(is_public=True).order_by('-created_at')
+
 
 class RecipeDetailView(DetailView):
     model = Recipe
     template_name = 'recipes/recipe_detail.html'
     context_object_name = 'specific_recipe'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not obj.is_public and obj.user != self.request.user:
+            raise Http404("Recipe not found.")
+        return obj
 
 class RecipeCreateView(CreateView):
     model = Recipe
@@ -67,7 +82,16 @@ class RecipeTableView(ListView):
             sort_by = 'cost'
 
         order = sort_by if direction == 'asc' else f"-{sort_by}"
-        return Recipe.objects.order_by(order)
+
+        base_qs = Recipe.objects.all()
+        if self.request.user.is_authenticated:
+            base_qs = base_qs.filter(
+                models.Q(is_public=True) | models.Q(user=self.request.user)
+            )
+        else:
+            base_qs = base_qs.filter(is_public=True)
+
+        return base_qs.order_by(order)
 
     # Override to make get_context_data to include sort state in template context
     def get_context_data(self, **kwargs):
